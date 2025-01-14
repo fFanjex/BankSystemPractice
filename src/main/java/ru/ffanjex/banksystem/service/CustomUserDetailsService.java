@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.ffanjex.banksystem.dto.UserDTO;
+import ru.ffanjex.banksystem.mapper.UserMapper;
 import ru.ffanjex.banksystem.model.User;
 import ru.ffanjex.banksystem.repository.UserRepository;
 import java.util.Optional;
@@ -12,10 +14,12 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -28,9 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         User user = optionalUser.get();
+        UserDTO userDTO = userMapper.toUserDTO(user);
 
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
+                .username(userDTO.getUsername())
                 .password(user.getPassword())
                 .roles("USER")
                 .build();

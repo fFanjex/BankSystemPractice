@@ -3,6 +3,8 @@ package ru.ffanjex.banksystem.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.ffanjex.banksystem.dto.UserDTO;
+import ru.ffanjex.banksystem.mapper.UserMapper;
 import ru.ffanjex.banksystem.model.User;
 import ru.ffanjex.banksystem.repository.UserRepository;
 
@@ -13,14 +15,17 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
-    public User registerUser(String username, String password, String email) {
+    public UserDTO registerUser(String username, String password, String email) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
@@ -29,7 +34,10 @@ public class UserService {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserDTO(savedUser);
     }
 
     public List<User> getAllUsers() {
