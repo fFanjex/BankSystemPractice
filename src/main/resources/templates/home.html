@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Финансовый Дневник</title>
+    <link rel="stylesheet" href="/home.css">
+</head>
+<body>
+<div class="container">
+    <h1>Мой Финансовый Дневник</h1>
+    <div class="button-container">
+        <a href="/expenses" class="button">Посмотреть все мои затраты</a>
+        <a href="/categories" class="button">Посмотреть все категории</a>
+    </div>
+    <div class="input-container">
+        <form action="/expenses/month" method="get">
+            <label for="month">Выберите месяц:</label>
+            <input type="month" id="month" name="month" required>
+            <button type="submit" class="button">Посмотреть траты за месяц</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
